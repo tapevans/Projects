@@ -13,10 +13,12 @@
 
 # Import necessary modules:
 from scipy.integrate import solve_ivp #integration function for ODE system.
+import numpy as np
+from A123_P2D_function import residual
+from A123_P2D_init import SV_0, t_final, pars, ptr
 
-# Either directly in this file, or in a separate file that you import, define: 
-#   - A residual function called 'residual'
-#   - An array 'time_span' which has [0, t_final] where t_final is the total 
-#       length of time you want the model to simulate.
-#   - An intial solution vector SV_0
-solution = solve_ivp(residual, time_span, SV_0,rtol=1e-4, atol=1e-6)
+time_span = np.array([0, t_final])
+
+solution = solve_ivp(lambda t, y: residual(t, y, pars, ptr), time_span, SV_0, rtol=1e-4, atol=1e-6)
+
+# %%%%%%%%%%%% Add plotting stuff
