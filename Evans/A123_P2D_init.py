@@ -26,7 +26,7 @@ voltage_an = np.array([phi_an, phi_elyte])
 X_an_vec = X_an*Np_ones
 anode_block = np.concatenate([voltage_an, X_an_vec, [Temp_start]])
 # print('anode_block = ', anode_block)
-voltage_sep = np.array([phi_elyte])
+#voltage_sep = np.array([phi_elyte])
 sep_block = np.array([phi_elyte, X_sep, Temp_start])
 # print('sep_block = ', sep_block)
 voltage_ca = np.array([phi_ca, phi_elyte])
@@ -68,24 +68,24 @@ class ptr:
     phi_an_ptr = []
     for i in range(N_an):
         phi_an_ptr.append(i*(3+N_part))   # index of the solid state anode voltage (outer volume of the particle)
-    # print(phi_an_ptr)
+    #print(phi_an_ptr)
 
     phi_elyte_an_ptr = phi_an_ptr + np.ones_like(phi_an_ptr)  # index for the voltage of the electrolyte in an anode_block
-    # print(phi_elyte_an_ptr)
+    #print(phi_elyte_an_ptr)
 
     X_an_ptr = phi_elyte_an_ptr + np.ones_like(phi_elyte_an_ptr)  # index for the concentration of the outer volume for
-    # print(X_an_ptr)
+    #print(X_an_ptr)
 
     T_an_ptr = X_an_ptr + N_part*np.ones_like(X_an_ptr)  # index of the temperature for each block
-    # print(T_an_ptr)
-    # print(T_an_ptr[-1])
+    #print(T_an_ptr)
+    #print(T_an_ptr[-1])
 
-    phi_sep_ptr = [T_an_ptr[-1]] + [1]
-    # print('phi_sep_ptr',phi_sep_ptr)
-    X_sep_ptr = phi_sep_ptr + [1]
-    # print(X_sep_ptr)
-    T_sep_ptr = X_sep_ptr + [1]
-    # print(T_sep_ptr)
+    phi_sep_ptr = [T_an_ptr[-1] + 1]
+    #print('phi_sep_ptr',phi_sep_ptr)
+    X_sep_ptr = [phi_sep_ptr[0] + 1]
+    #print(X_sep_ptr)
+    T_sep_ptr = [X_sep_ptr[0] + 1]
+    #print(T_sep_ptr)
 
     # phi_ca_ptr = T_sep_ptr + [1]
     phi_ca_ptr = [T_sep_ptr[-1] + 1]
@@ -107,7 +107,7 @@ class pars:
     T = Temp_start  # This could change if temperature dependence is implemented
 
     i_ext = C_rate * capacity_area  # This could change if doing EIS simulation
-
+    N_part = N_part
     # Anode
     C_dl_an_inv = 1 / C_dl_an
     R_sei_an = R_sei_an
