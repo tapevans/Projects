@@ -4,7 +4,11 @@ from math import exp
 # Constants
 F = 96485
 R = 8.3145
+def dSVdt(t, SV, pars, ptr):
+    # Starting fresh
+    dSV_dt = np.zeros_like(SV)
 
+    return dSV_dt
 
 def residual(t, SV, pars, ptr):
     # Initialize dSV_dt

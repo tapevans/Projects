@@ -14,13 +14,15 @@
 # Import necessary modules:
 from scipy.integrate import solve_ivp #integration function for ODE system.
 import numpy as np
-from A123_P2D_function import residual
+#from A123_P2D_function import residual
+from A123_P2D_function import dSVdt
 from A123_P2D_init import SV_0, t_final, pars, ptr
 
 
 time_span = np.array([0, t_final])
 #print('Shape of SV_0 =', np.shape(SV_0))
-solution = solve_ivp(lambda t, y: residual(t, y, pars, ptr), time_span, SV_0, 'BDF', rtol=1e-4, atol=1e-6)  # BDF  Radau
+#solution = solve_ivp(lambda t, y: residual(t, y, pars, ptr), time_span, SV_0, 'BDF', rtol=1e-4, atol=1e-6)  # BDF  Radau
+solution = solve_ivp(lambda t, y: dSVdt(t, y, pars, ptr), time_span, SV_0, 'BDF', rtol=1e-4, atol=1e-6)  # BDF  Radau
 #print('Shape of solution =', np.shape(solution))
 #print('Shape of solution.t =', np.shape(solution.t))
 #print('Shape of solution.y =', np.shape(solution.y))

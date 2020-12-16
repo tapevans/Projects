@@ -148,8 +148,9 @@ for i in range(N_tot):
 class ptr:
     X_Li_ion_ptr = 0
     #delta_phi_ptr = X_Li_ion_ptr + 1
+    # X_Li_ptr = delta_phi_ptr + 1
     charge_dl_ptr = X_Li_ion_ptr + 1
-    X_Li_ptr = delta_phi_ptr + 1
+    X_Li_ptr = charge_dl_ptr + 1
     T_ptr = X_Li_ptr + N_part
 
 
