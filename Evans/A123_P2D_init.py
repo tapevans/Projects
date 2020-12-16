@@ -30,10 +30,13 @@ phi_elyte = 1.0  # V %%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 Np_ones = np.ones(N_part)
 X_an_vec = X_an*Np_ones
 X_ca_vec = X_ca*Np_ones
-
-anode_block = np.concatenate([[X_elyte], [phi_an - phi_elyte], X_an_vec, [Temp_start]])
+q_0 = 0
+#anode_block = np.concatenate([[X_elyte], [phi_an - phi_elyte], X_an_vec, [Temp_start]])
+anode_block = np.concatenate([[X_elyte], [q_0], X_an_vec, [Temp_start]])
+#sep_block = np.concatenate([[X_elyte], [0], 0*X_an_vec, [Temp_start]])
 sep_block = np.concatenate([[X_elyte], [0], 0*X_an_vec, [Temp_start]])
-cathode_block = np.concatenate([[X_elyte], [phi_ca - phi_elyte], X_ca_vec, [Temp_start]])
+#cathode_block = np.concatenate([[X_elyte], [phi_ca - phi_elyte], X_ca_vec, [Temp_start]])
+cathode_block = np.concatenate([[X_elyte], [q_0], X_ca_vec, [Temp_start]])
 
 #   - Initialize the SV_O using the first anode_block
 N_tot = N_an + N_sep + N_ca
@@ -144,7 +147,8 @@ for i in range(N_tot):
 # Create class to point to the correct variable location in the SV
 class ptr:
     X_Li_ion_ptr = 0
-    delta_phi_ptr = X_Li_ion_ptr + 1
+    #delta_phi_ptr = X_Li_ion_ptr + 1
+    charge_dl_ptr = X_Li_ion_ptr + 1
     X_Li_ptr = delta_phi_ptr + 1
     T_ptr = X_Li_ptr + N_part
 

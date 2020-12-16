@@ -14,6 +14,9 @@ def residual(t, SV, pars, ptr):
     dSV_dt = np.zeros_like(SV)
     #print(dSV_dt)
 
+    #for i in range(pars.N_tot):
+
+
     # Anode
     for i in range(pars.N_an):
         block = i
