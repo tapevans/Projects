@@ -4,13 +4,123 @@ from math import exp
 # Constants
 F = 96485
 R = 8.3145
-def dSVdt(t, SV, pars, ptr):
+def residual(t, SV, dSVdt, pars, ptr):
     # Starting fresh
-    dSV_dt = np.zeros_like(SV)
+    SV    = np.reshape(SV, (pars.N_tot, -1))
+    dSVdt = np.reshape(SV, (pars.N_tot, -1))
+    res   = np.zeros_like(SV)
+    print(res)
 
-    return dSV_dt
+    # Create vectors to call for gradient and divergent
+    gradphi_elyte_plus_half = np.zeros_like(SV)
+    gradphi_elyte_minus_half = np.zeros_like(SV)
+    gradphi_solid_plus_half = np.zeros_like(SV)
+    gradphi_solid_minus_half = np.zeros_like(SV)
+    gradphi_C_Li_ion_plus_half = np.zeros_like(SV)
+    gradphi_elyte_minus_half = np.zeros_like(SV)
 
-def residual(t, SV, pars, ptr):
+    #for i in range(pars.N_tot):
+
+
+    #eta[meshnode] = SV[ptr.delta_phi] - pars.E_eq
+    #i_BV[meshnode] = pars.i_o_an * (exp(-pars.n_an * pars.beta_an * F * eta[meshnode] / R / T[meshnode]) - exp(pars.n_an * (1 - pars.beta_an) * F * eta[meshnode] / R / T[meshnode]))
+
+
+    # Anode
+    for i in range(pars.N_an):
+        meshnode = i
+        # - Elyte Cons of Mass
+        res[meshnode][ptr.C_Li_ion_ptr] = 1
+
+        # - Solid Cons of Mass ############ Add for loop
+        for j in range(pars.N_part):
+            slice = ptr.C_Li_ptr + j
+            res[meshnode][slice] = 1
+
+        # - Elyte Cons of Charge
+        res[meshnode][ptr.phi_elyte_ptr] = 1
+
+        # - Solid Cons of Charge
+        res[meshnode][ptr.phi_s_ptr] = 1
+
+        # - Temperature
+        res[meshnode][ptr.T_ptr] = 1
+
+    # Separator
+    for i in range(pars.N_sep):
+        meshnode = i + pars.N_an
+
+        # - Elyte Cons of Mass
+        res[meshnode][ptr.C_Li_ion_ptr] = 1
+
+        # - Solid Cons of Mass ############ Add for loop
+        for j in range(pars.N_part):
+            slice = ptr.C_Li_ptr + j
+            res[meshnode][slice] = 1
+
+        # - Elyte Cons of Charge
+        res[meshnode][ptr.phi_elyte_ptr] = 1
+
+        # - Solid Cons of Charge
+        res[meshnode][ptr.phi_s_ptr] = 1
+
+        # - Temperature
+        res[meshnode][ptr.T_ptr] = 1
+
+    # Cathode
+    for i in range(pars.N_ca):
+        meshnode = i + pars.N_an + pars.N_sep
+
+        # - Elyte Cons of Mass
+        res[meshnode][ptr.C_Li_ion_ptr] = 1
+
+        # - Solid Cons of Mass ############ Add for loop
+        for j in range(pars.N_part):
+            slice = ptr.C_Li_ptr + j
+            res[meshnode][slice] = 1
+
+        # - Elyte Cons of Charge
+        res[meshnode][ptr.phi_elyte_ptr] = 1
+
+        # - Solid Cons of Charge
+        res[meshnode][ptr.phi_s_ptr] = 1
+
+        # - Temperature
+        res[meshnode][ptr.T_ptr] = 1
+
+
+
+    print(res)
+    pbreak
+    return res
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+def dSVdt(t, SV, pars, ptr):
     # Initialize dSV_dt
     SV = np.reshape(SV, (pars.N_tot, -1))
     print('t=', t)
@@ -27,25 +137,26 @@ def residual(t, SV, pars, ptr):
 
         # Charge Transfer
         X_an_avg = np.dot(SV[block][ptr.X_Li_ptr:ptr.X_Li_ptr+pars.N_part], pars.V_part_an)/np.sum(pars.V_part_an)
-        #print('X_an_avg', X_an_avg)
         phi_ed_equil = VoltEquibAnode(X_an_avg)
-        #print('phi_ed_equil', phi_ed_equil)
         phi_ed_surf = VoltEquibAnode(SV[block][ptr.X_Li_ptr])
-        #print('phi_ed_surf', phi_ed_surf)
         phi_elyte = phi_ed_surf - SV[block][ptr.delta_phi_ptr]
-        #print('phi_elyte', phi_elyte)
         eta = (phi_ed_surf - phi_elyte) - (phi_ed_equil - pars.phi_elyte_equil)
-        print('eta_an', eta)
         RTinv = 1 / R / SV[block][ptr.T_ptr]
-        #print('T',SV[block][ptr.T_ptr])
         i_Far = pars.i_o_an * (exp(-pars.n_an * F * pars.beta_an * eta * RTinv) - exp(pars.n_an * F * (1 - pars.beta_an) * eta * RTinv))
-        #print('i_Far_an', i_Far)
         s_dot_Li = -pars.nu_Li * i_Far / pars.n_an / F
-        print('s_dot_Li_an', s_dot_Li)
         s_dot_Li_ion = -pars.nu_Li_ion * i_Far / pars.n_an / F
-        print('s_dot_Li_ion_an', s_dot_Li_ion)
         i_dl = pars.i_ext * (pars.A_geo_min / pars.A_surf_an) - i_Far
-        #print('i_dl', i_dl)
+
+        # print('X_an_avg', X_an_avg)
+        # print('phi_ed_equil', phi_ed_equil)
+        # print('phi_ed_surf', phi_ed_surf)
+        # print('phi_elyte', phi_elyte)
+        # print('eta_an', eta)
+        # print('T',SV[block][ptr.T_ptr])
+        # print('i_Far_an', i_Far)
+        # print('s_dot_Li_an', s_dot_Li)
+        # print('s_dot_Li_ion_an', s_dot_Li_ion)
+        # print('i_dl', i_dl)
             #A_surf[block] use this if start making particles different sizes throughout the electrode
 
         # Mass Transport
@@ -64,7 +175,6 @@ def residual(t, SV, pars, ptr):
         #   - Li^+ diffusion coming in from the right block
         D_right = (1 / (pars.del_z_vec[block + 1] + pars.del_z_vec[block])) * (pars.del_z_vec[block + 1] * pars.D_eff_Li_ion_vec[block] + pars.del_z_vec[block] *pars.D_eff_Li_ion_vec[block])
         gradC_right = (SV[block + 1][ptr.X_Li_ion_ptr] - SV[block][ptr.X_Li_ion_ptr]) / np.absolute(pars.pos_vec[block + 1] - pars.pos_vec[block])
-        #print('gradC_right', gradC_right)
         C_intf_right = SV[block][ptr.X_Li_ion_ptr] + gradC_right * pars.del_z_vec[block] * 0.5
         phi_elyte_right = VoltEquibAnode(SV[block + 1][ptr.X_Li_ptr]) - SV[block + 1][ptr.delta_phi_ptr]
         #print('phi_elyte_right', phi_elyte_right)
@@ -72,6 +182,8 @@ def residual(t, SV, pars, ptr):
         gradphi_right = 0
         #print('gradphi_right', gradphi_right)
         N_dot_right = -(- D_right * gradC_right - D_right * C_intf_right * F * RTinv * gradphi_right)  # Changed signs
+        # print('gradC_right', gradC_right)
+
 
         #print('N_dot_left', N_dot_left)
         #print('N_dot_right', N_dot_right)

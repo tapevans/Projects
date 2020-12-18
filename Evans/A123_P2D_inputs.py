@@ -56,7 +56,7 @@ capacity_graphite = 370  # [Ah/kg]
 C_max_graphite = 17000  # [mol/m^3] Guess value
 el_cond_an = 100000  # [S/m]
 C_dl_an = 0.01  # [F/m^2]
-R_sei_an = 0.027  # [ohm m^2], solid electrolyte interface resistance
+R_sei_an = 0  # [ohm m^2], solid electrolyte interface resistance, 0.027 <-- BDS
 i_o_an = 1.5  # [A/m^2], exchange current density
 n_an = -1  # [equivalents], charge transferred to the electrode
 beta_an = 0.5  # [-], Symmetry factor
@@ -69,7 +69,7 @@ capacity_LFP = 170  # [Ah/kg]
 C_max_LFP = 22800  # [mol/m^3] ,found from paper Representative Volume... by Ali Ghorbani Kashkooli (osti.gov)
 el_cond_ca = 100000  # [S/m]
 C_dl_ca = 0.01  # [F/m^2]
-R_sei_ca = 0.012  # [ohm m^2], solid electrolyte interface resistance
+R_sei_ca = 0  # [ohm m^2], solid electrolyte interface resistance, 0.012 <-- BDS
 i_o_ca = 0.2  # [A/m^2], exchange current density
 n_ca = -1  # [equivalents], charge transferred to the electrode
 beta_ca = 0.5  # [-], Symmetry factor
@@ -80,6 +80,6 @@ D_0_Li_ion = 1.75e-10  # [m^2/s], Li^+ liquid diffusion coefficient
 
 # Numerical Parameters
 N_part  = 3  # Number of nodes in solid particle
-N_an    = 1  # Number of nodes in the anode
+N_an    = 3  # Number of nodes in the anode
 N_sep   = 1  # Number of nodes in the separator
-N_ca    = 1  # Number of nodes in the cathode
+N_ca    = 3  # Number of nodes in the cathode

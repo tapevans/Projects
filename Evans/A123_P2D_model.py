@@ -1,5 +1,5 @@
 """
-    This file runs and executes a youyr model, calculating the cell/device/system properties of interest as a function of time. 
+    This file runs and executes a your model, calculating the cell/device/system properties of interest as a function of time.
 
     The code structure at this level is meant to be very simple, and delegates most functions to lower-level modules, which can be updated with new capabilties, over time.  The code:
 
@@ -12,17 +12,24 @@
 """
 
 # Import necessary modules:
-from scipy.integrate import solve_ivp #integration function for ODE system.
+#from scipy.integrate import solve_ivp  # integration function for ODE system.
+from assimulo.problem import Implicit_Problem
+from assimulo.solvers import IDA
 import numpy as np
-#from A123_P2D_function import residual
-from A123_P2D_function import dSVdt
-from A123_P2D_init import SV_0, t_final, pars, ptr
+from A123_P2D_function import residual
+# from A123_P2D_function import dSVdt
+from A123_P2D_init import SV_0, dSVdt_0,  t_final, pars, ptr
 
 
 time_span = np.array([0, t_final])
+t0 = time_span[0]
 #print('Shape of SV_0 =', np.shape(SV_0))
-#solution = solve_ivp(lambda t, y: residual(t, y, pars, ptr), time_span, SV_0, 'BDF', rtol=1e-4, atol=1e-6)  # BDF  Radau
-solution = solve_ivp(lambda t, y: dSVdt(t, y, pars, ptr), time_span, SV_0, 'BDF', rtol=1e-4, atol=1e-6)  # BDF  Radau
+model = Implicit_Problem(residual, SV_0, dSVdt_0, t0)
+sim = IDA(model)
+
+ncp = 500  # Number of communication points (number of return points)
+t, y, yd = sim.simulate(t_final, ncp)
+#solution = solve_ivp(lambda t, y: dSVdt(t, y, pars, ptr), time_span, SV_0, 'BDF', rtol=1e-4, atol=1e-6)  # BDF  Radau
 #print('Shape of solution =', np.shape(solution))
 #print('Shape of solution.t =', np.shape(solution.t))
 #print('Shape of solution.y =', np.shape(solution.y))
