@@ -18,8 +18,8 @@ from scipy.integrate import solve_ivp  # integration function for ODE system.
 import numpy as np
 #from A123_P2D_function import residual
 from A123_P2D_function import dSVdt
-from A123_P2D_init import SV_0, dSVdt_0,  t_final, pars, ptr
-
+from A123_P2D_init import SV_0, t_final, pars, ptr  # dSVdt_0
+from matplotlib import pyplot as plt
 
 time_span = np.array([0, t_final])
 t0 = time_span[0]
@@ -35,7 +35,7 @@ solution = solve_ivp(lambda t, y: dSVdt(t, y, pars, ptr), time_span, SV_0, 'BDF'
 #print('Shape of solution.t =', np.shape(solution.t))
 #print('Shape of solution.y =', np.shape(solution.y))
 #print('Solution.t =', solution.t)
-#print('Solution.y =', solution.y)
+print('Solution.y =', solution.y)
 file = open("solutiont.txt", "w")
 file.write(str(solution.t))
 file.close()
@@ -44,18 +44,31 @@ file = open("solutiony.txt", "w")
 file.write(str(solution.y))
 file.close()
 # %%%%%%%%%%%% Add plotting stuff to another file
-from matplotlib import pyplot as plt
-#anode_temp = np.transpose(solution.y[ptr.T_an_ptr[0]][:])
+
+anode_temp = np.transpose(solution.y[ptr.T_ptr][:])
+delta_phi_an = np.transpose(solution.y[ptr.delta_phi_ptr][:])
+Li_ion_an = np.transpose(solution.y[ptr.X_Li_ptr][:])
+print(Li_ion_an)
+#print(solution.t)
+#print('Shape of time=', np.shape(solution.t))
 #print(anode_temp)
 #print('Shape of anode_temp =', np.shape(anode_temp))
+
 #for var in anode_temp:
     #print('Shape soln.t', np.shape(solution.t))
     #print('Shape var', np.shape(var))
     #pbreak
 #plt.plot(solution.t, anode_temp)
+#plt.show()
+
+#plt.plot(solution.t, delta_phi_an)
+#plt.show()
+
+plt.plot(solution.t, Li_ion_an)
+plt.show()
 
 for var in solution.y:
     plt.plot(solution.t, var)
-
-#plt.legend(['Anode double layer', 'Cathode double layer'])
 #plt.show()
+#plt.legend(['Anode double layer', 'Cathode double layer'])
+

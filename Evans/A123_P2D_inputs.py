@@ -78,6 +78,6 @@ D_0_Li_ion          = 1.75e-10  # [m^2/s], Li^+ liquid diffusion coefficient
 
 # Numerical Parameters
 N_part  = 3  # Number of nodes in solid particle
-N_an    = 3  # Number of nodes in the anode
+N_an    = 1  # Number of nodes in the anode
 N_sep   = 1  # Number of nodes in the separator
-N_ca    = 3  # Number of nodes in the cathode
+N_ca    = 1  # Number of nodes in the cathode
