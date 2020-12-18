@@ -31,12 +31,12 @@ Np_ones = np.ones(N_part)
 X_an_vec = X_an*Np_ones
 X_ca_vec = X_ca*Np_ones
     #q_0 = 0
-    #anode_block = np.concatenate([[X_elyte], [phi_an - phi_elyte], X_an_vec, [Temp_start]])
-    #sep_block = np.concatenate([[X_elyte], [0], 0*X_an_vec, [Temp_start]])
-    #cathode_block = np.concatenate([[X_elyte], [phi_ca - phi_elyte], X_ca_vec, [Temp_start]])
-anode_block   = np.concatenate([[X_elyte*C_Li_ion_ref], C_max_graphite*X_an_vec, [0],      [phi_elyte], [Temp_start]])
-sep_block     = np.concatenate([[X_elyte*C_Li_ion_ref], 0*X_an_vec,              [0],      [phi_elyte], [Temp_start]])
-cathode_block = np.concatenate([[X_elyte*C_Li_ion_ref], C_max_graphite*X_an_vec, [phi_ca], [phi_elyte], [Temp_start]])
+anode_block = np.concatenate([[X_elyte], [phi_an - phi_elyte], X_an_vec, [Temp_start]])
+sep_block = np.concatenate([[X_elyte], [0], 0*X_an_vec, [Temp_start]])
+cathode_block = np.concatenate([[X_elyte], [phi_ca - phi_elyte], X_ca_vec, [Temp_start]])
+#anode_block   = np.concatenate([[X_elyte*C_Li_ion_ref], C_max_graphite*X_an_vec, [0],      [phi_elyte], [Temp_start]])
+#sep_block     = np.concatenate([[X_elyte*C_Li_ion_ref], 0*X_an_vec,              [0],      [phi_elyte], [Temp_start]])
+#cathode_block = np.concatenate([[X_elyte*C_Li_ion_ref], C_max_graphite*X_an_vec, [phi_ca], [phi_elyte], [Temp_start]])
 
 #   - Initialize the SV_O and dSVdt_0 using the first anode_block
 N_tot = N_an + N_sep + N_ca
@@ -158,16 +158,11 @@ for i in range(N_tot):
 
 # Create class to point to the correct variable location in the SV
 class ptr:
-    #SV = [[X_elyte * C_Li_ion_ref], C_max_graphite * X_an_vec, [phi_an], [phi_elyte], [Temp_start]]
-    C_Li_ion_ptr = 0
-    C_Li_ptr = C_Li_ion_ptr + 1
-    phi_s_ptr = C_Li_ptr + N_part
-    phi_elyte_ptr = phi_s_ptr + 1
-    T_ptr = phi_elyte_ptr + 1
-
-        # charge_dl_ptr = X_Li_ion_ptr + 1
-        # delta_phi_ptr = X_Li_ion_ptr + 1
-        # X_Li_ptr = delta_phi_ptr + 1
+    #anode_block = np.concatenate([[X_elyte], [phi_an - phi_elyte], X_an_vec, [Temp_start]])
+    X_Li_ion_ptr = 0
+    delta_phi_ptr = X_Li_ion_ptr + 1
+    X_Li_ptr = delta_phi_ptr + 1
+    T_ptr = X_Li_ptr + N_part
 
 
 # Load inputs and other parameters into 'pars' class:
