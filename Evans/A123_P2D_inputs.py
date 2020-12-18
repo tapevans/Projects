@@ -9,7 +9,7 @@ freq                = 1     # [rad/s] # freq = np.array[0.001, 0.1, 1, 10]  # [r
 CurrentAmplitude    = 0.01  # [Amps]
 #   - Polarization Simulation Parameters
 C_rate              = 1     # How many charges per hour # C_rate = np.array[0.1, 1, 2, 5, 8]
-charge_frac         = 0.3   # How deep do we want to charge/discharge?
+charge_frac         = 0.5   # How deep do we want to charge/discharge?
 ChargeOrDischarge   = 1     # -1 if Charge, 1 if Discharge
 #   - Overall Simulation Parameters
 SOC_start           = 100   # [%], Initial state of charge of the cell

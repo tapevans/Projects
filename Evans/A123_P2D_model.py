@@ -64,11 +64,11 @@ print(Li_ion_an)
 #plt.plot(solution.t, delta_phi_an)
 #plt.show()
 
-plt.plot(solution.t, Li_ion_an)
-plt.show()
+#plt.plot(solution.t, Li_ion_an)
+#plt.show()
 
 for var in solution.y:
     plt.plot(solution.t, var)
-#plt.show()
+plt.show()
 #plt.legend(['Anode double layer', 'Cathode double layer'])
 
